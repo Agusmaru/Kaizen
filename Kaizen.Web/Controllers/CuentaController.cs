@@ -14,10 +14,14 @@ public sealed class CuentaController(
     ServicioSesionesUsuario sesiones) : Controller
 {
     [AllowAnonymous, HttpGet]
-    public IActionResult Ingresar(string? retorno = null) =>
-        User.Identity?.IsAuthenticated == true
-            ? RedirectToAction("Index", "Home")
-            : View(new LoginViewModel { Retorno = retorno });
+    public IActionResult Ingresar(string? retorno = null, bool sesionExpirada = false)
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
+
+        ViewBag.SesionExpirada = sesionExpirada;
+        return View(new LoginViewModel { Retorno = retorno });
+    }
 
     [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Ingresar(LoginViewModel vm)

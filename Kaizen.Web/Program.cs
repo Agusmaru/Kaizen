@@ -8,12 +8,19 @@ using Kaizen.Infrastructure.Identidad;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Kaizen.Web.Filters;
 var builder = WebApplication.CreateBuilder(args);
 var cadenaKaizen = builder.Configuration.GetConnectionString("KaizenDb")
     ?? throw new InvalidOperationException("Falta configurar la cadena de conexión 'KaizenDb'.");
-builder.Services.AddControllersWithViews();
+var directorioClaves = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtectionKeys");
+Directory.CreateDirectory(directorioClaves);
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(directorioClaves))
+    .SetApplicationName("Kaizen");
+builder.Services.AddControllersWithViews(options => options.Filters.Add<AntiforgeryExpiradoFilter>());
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cadenaKaizen));
 builder.Services.AddDbContext<ContextoIdentidad>(options => options.UseSqlServer(cadenaKaizen));
 builder.Services.AddHttpContextAccessor();

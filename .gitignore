@@ -23,6 +23,7 @@ work/
 *.bak
 *.log
 cookies*.txt
+**/App_Data/DataProtectionKeys/
 
 # Secrets and local environment overrides
 .env

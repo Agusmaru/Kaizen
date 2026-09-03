@@ -22,6 +22,10 @@
         <nav class="auth-nav" aria-label="Acceso a la cuenta"><a class="active" asp-action="Ingresar">Ingresar</a><a asp-action="Registrarse">Registrarse</a></nav>
         <div class="login-card">
             <div class="login-heading"><p>Bienvenido de nuevo</p><h2>Ingresá a Kaizen</h2><span>Continuá construyendo la mejor versión de vos.</span></div>
+            @if (ViewBag.SesionExpirada == true)
+            {
+                <div class="alert alert-warning" role="alert">Tu sesión anterior venció. Ingresá nuevamente para continuar.</div>
+            }
             <form asp-action="Ingresar" method="post" novalidate>
                 <input asp-for="Retorno" type="hidden" />
                 <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
