@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kaizen.Application\Kaizen.Application.csproj" />
+    <ProjectReference Include="..\Kaizen.Domain\Kaizen.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Migraciones de una arquitectura anterior; se preservan como referencia y no forman parte del modelo activo. -->
+    <Compile Remove="LegacyMigrations\**\*.cs" />
+    <None Include="LegacyMigrations\**\*.cs" />
+  </ItemGroup>
+</Project>

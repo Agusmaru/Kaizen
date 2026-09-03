@@ -1,0 +1,13 @@
+@{ViewData["Titulo"]="Calendario";var initial=(DateOnly)ViewBag.InitialDate;}
+@section Styles{<link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true"/>}
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li><li class="breadcrumb-item active">Calendario</li></ol></nav>
+<div class="page-header"><div><h1 class="h3 mb-1">Calendario</h1><p class="mb-0">Registrá el resultado de tus acciones programadas.</p></div><div class="d-flex gap-2 flex-wrap"><div class="btn-group" role="group" aria-label="Tipo de vista"><button id="month-view" class="btn btn-primary" type="button">Mes</button><button id="week-view" class="btn btn-outline-primary" type="button">Semana</button></div><div class="btn-group"><button id="previous-range" class="btn btn-outline-primary" type="button">Anterior</button><button id="today-range" class="btn btn-outline-primary" type="button">Hoy</button><button id="next-range" class="btn btn-outline-primary" type="button">Siguiente</button></div></div></div>
+<div id="calendar-feedback" class="alert d-none" role="status" aria-live="polite"></div>
+<div class="card" id="calendar" data-initial-date="@initial.ToString("yyyy-MM-dd")" data-events-url="@Url.Action("Events","Calendar")" data-log-url="@Url.Action("Registro","Calendar")">
+ <div class="card-header bg-white"><h2 id="calendar-title" class="section-title mb-0 text-capitalize"></h2></div>
+ <div id="calendar-loading" class="py-5 text-center" role="status"><div class="spinner-border text-primary" aria-hidden="true"></div><p class="mt-2 mb-0">Cargando calendario…</p></div>
+ <div id="calendar-error" class="alert alert-danger m-3 d-none" role="alert"></div>
+ <div id="calendar-content" class="list-group list-group-flush" aria-live="polite"></div>
+</div>
+<form id="antiforgery-source" class="d-none">@Html.AntiForgeryToken()</form>
+@section Scripts {<script src="~/js/calendar.js" asp-append-version="true"></script>}

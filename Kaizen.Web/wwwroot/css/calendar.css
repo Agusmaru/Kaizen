@@ -1,0 +1,70 @@
+.today-row-complete {
+    color: #495057;
+    text-decoration: line-through;
+}
+
+.calendar-date {
+    flex: 0 0 70px;
+    width: 70px;
+    text-align: center;
+}
+
+.calendar-date strong {
+    display: block;
+    font-size: 1.5rem;
+}
+
+.calendar-date small {
+    text-transform: uppercase;
+}
+
+.calendar-entry .form-control {
+    max-width: 220px;
+}
+
+@media (max-width: 767.98px) {
+    .calendar-date {
+        flex-basis: 48px;
+        width: 48px;
+        text-align: left;
+    }
+
+    #calendar > .card-header {
+        text-align: center;
+    }
+
+    #calendar-content > .list-group-item {
+        padding: .75rem;
+        gap: .5rem !important;
+        align-items: flex-start;
+    }
+
+    .calendar-entry {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: .65rem !important;
+        padding: .85rem 0 !important;
+    }
+
+    .calendar-entry > div,
+    .calendar-entry .form-control {
+        grid-column: 1 / -1;
+        max-width: none;
+        width: 100%;
+    }
+
+    .calendar-entry .btn {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+@media (max-width: 399.98px) {
+    .calendar-entry {
+        grid-template-columns: 1fr;
+    }
+
+    .calendar-entry > * {
+        grid-column: 1;
+    }
+}

@@ -1,0 +1,21 @@
+@model AssessmentFormViewModel
+@{ViewData["Titulo"]="Análisis Kaizen";}
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li><li class="breadcrumb-item"><a asp-controller="Goals" asp-action="Index">Metas</a></li><li class="breadcrumb-item active">Análisis inicial</li></ol></nav>
+<div class="page-header"><div><h1 class="h3 mb-1">Análisis Kaizen inicial</h1><p class="mb-0">Respondé estas preguntas para convertir “@Model.GoalTitle” en un plan realista.</p></div></div>
+<div class="card"><div class="card-body">
+<form id="assessment-form" asp-controller="Goals" asp-action="Evaluacion" asp-route-id="@Model.MetaId" method="post">
+ <input asp-for="MetaId" type="hidden" />
+ <input asp-for="GoalTitle" type="hidden" />
+ <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+ <div class="mb-3"><label asp-for="DondeEstoy" class="form-label">¿Dónde estoy actualmente?</label><textarea asp-for="DondeEstoy" class="form-control" rows="2"></textarea><span asp-validation-for="DondeEstoy" class="text-danger"></span></div>
+ <div class="mb-3"><label asp-for="QueCambiar" class="form-label">¿Qué quiero cambiar?</label><textarea asp-for="QueCambiar" class="form-control" rows="2"></textarea><span asp-validation-for="QueCambiar" class="text-danger"></span></div>
+ <div class="mb-3"><label asp-for="Obstaculos" class="form-label">¿Qué obstáculos tengo?</label><textarea asp-for="Obstaculos" class="form-control" rows="2"></textarea><span asp-validation-for="Obstaculos" class="text-danger"></span></div>
+ <div class="mb-3"><label asp-for="QueFunciona" class="form-label">¿Qué estoy haciendo bien?</label><textarea asp-for="QueFunciona" class="form-control" rows="2"></textarea><span asp-validation-for="QueFunciona" class="text-danger"></span></div>
+ <div class="mb-3"><label asp-for="MejoraMasPequena" class="form-label">¿Cuál es la mejora más pequeña que puedo comenzar hoy?</label><textarea asp-for="MejoraMasPequena" class="form-control" rows="2"></textarea><span asp-validation-for="MejoraMasPequena" class="text-danger"></span></div>
+ <div class="mb-3"><label asp-for="EvidenciaMejora" class="form-label">¿Cómo sabré si estoy mejorando?</label><textarea asp-for="EvidenciaMejora" class="form-control" rows="2"></textarea><span asp-validation-for="EvidenciaMejora" class="text-danger"></span></div>
+ <div class="mb-3"><label asp-for="DificultadPercibida" class="form-label">Dificultad percibida (1 a 5)</label><input asp-for="DificultadPercibida" class="form-control" type="number" min="1" max="5"/><span asp-validation-for="DificultadPercibida" class="text-danger"></span></div>
+ <div class="d-flex gap-2"><button id="activate-goal" class="btn btn-primary" type="submit"><span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span><span class="button-label">Guardar y activar meta</span></button><a class="btn btn-outline-secondary" asp-controller="Goals" asp-action="Index">Volver</a></div>
+</form></div></div>
+@section Scripts {<partial name="_ValidationScriptsPartial"/><script>
+(()=>{const form=document.getElementById('assessment-form');const button=document.getElementById('activate-goal');const spinner=button.querySelector('.spinner-border');const label=button.querySelector('.button-label');const reset=()=>{button.disabled=false;spinner.classList.add('d-none');label.textContent='Guardar y activar meta';delete form.dataset.submitting;};form.addEventListener('submit',event=>{if(!form.checkValidity()||form.dataset.submitting){if(form.dataset.submitting)event.preventDefault();return;}form.dataset.submitting='true';button.disabled=true;spinner.classList.remove('d-none');label.textContent='Guardando…';});window.addEventListener('pageshow',reset);})();
+</script>}

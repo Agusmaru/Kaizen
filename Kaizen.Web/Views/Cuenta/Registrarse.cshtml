@@ -1,0 +1,34 @@
+@model RegistroViewModel
+@{ ViewData["Titulo"] = "Registrarse"; }
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">Crear cuenta</h1>
+                <form asp-action="Registrarse" method="post">
+                    <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+                    <div class="mb-3">
+                        <label asp-for="Correo" class="form-label">Correo</label>
+                        <input asp-for="Correo" class="form-control" autocomplete="username" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Clave" class="form-label">Contraseña</label>
+                        <input asp-for="Clave" class="form-control" autocomplete="new-password" />
+                        <span asp-validation-for="Clave" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmacionClave" class="form-label">Repetir contraseña</label>
+                        <input asp-for="ConfirmacionClave" class="form-control" autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmacionClave" class="text-danger"></span>
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Crear cuenta</button>
+                </form>
+                <p class="mt-3 mb-0 text-center">¿Ya tenés una cuenta? <a asp-action="Ingresar">Ingresá</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

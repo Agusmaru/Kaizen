@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Kaizen.Domain/Kaizen.Domain.csproj" />
+  <Project Path="Kaizen.Application/Kaizen.Application.csproj" />
+  <Project Path="Kaizen.Infrastructure/Kaizen.Infrastructure.csproj" />
+  <Project Path="Kaizen.Tests/Kaizen.Tests.csproj" />
+  <Project Path="Kaizen.Web/Kaizen.Web.csproj" />
+</Solution>

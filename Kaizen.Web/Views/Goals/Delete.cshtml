@@ -1,0 +1,10 @@
+@model DeleteConfirmationViewModel
+@{ViewData["Titulo"]="Eliminar meta";}
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-action="Index">Metas</a></li><li class="breadcrumb-item active">Confirmación</li></ol></nav>
+<div class="card border-danger"><div class="card-header bg-white"><h1 class="h4 mb-0">@(Model.WillArchive?"Archivar meta":"Eliminar meta")</h1></div><div class="card-body">
+<p>Vas a quitar la meta <strong>@Model.Titulo</strong>.</p>
+@if(Model.WillArchive){<div class="alert alert-warning"><strong>No se borrará el historial.</strong> La meta tiene actividad relacionada y será archivada. Dejará de aparecer en Inicio, calendario pendiente, revisiones pendientes y metas activas.</div>}else{<div class="alert alert-danger">Este borrador no tiene actividad histórica y se eliminará definitivamente.</div>}
+<dl class="row"><dt class="col-sm-4">Acciones</dt><dd class="col-sm-8">@Model.Acciones</dd><dt class="col-sm-4">Ocurrencias</dt><dd class="col-sm-8">@Model.Occurrences</dd><dt class="col-sm-4">Registros</dt><dd class="col-sm-8">@Model.Logs</dd><dt class="col-sm-4">Revisiones</dt><dd class="col-sm-8">@Model.Revisiones</dd></dl>
+<form asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post" data-confirm-form><div class="mb-3"><label class="form-label" for="reason">Motivo (opcional)</label><textarea class="form-control" id="reason" name="reason" rows="3"></textarea></div><div class="d-flex gap-2"><button class="btn btn-danger" type="submit"><span data-label>Confirmar @(Model.WillArchive?"archivo":"eliminación")</span><span class="spinner-border spinner-border-sm d-none" data-spinner></span></button><a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancelar</a></div></form>
+</div></div>
+<script>document.querySelector('[data-confirm-form]')?.addEventListener('submit',function(){const b=this.querySelector('button[type=submit]');b.disabled=true;b.querySelector('[data-spinner]').classList.remove('d-none');});</script>

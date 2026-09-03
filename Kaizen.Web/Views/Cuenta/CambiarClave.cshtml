@@ -1,0 +1,31 @@
+@model CambiarClaveViewModel
+@{ ViewData["Titulo"] = "Cambiar contraseña"; }
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">Cambiar contraseña</h1>
+                <p>Por seguridad, reemplazá la contraseña temporal antes de continuar.</p>
+                <form asp-action="CambiarClave" method="post">
+                    <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+                    <div class="mb-3">
+                        <label asp-for="ClaveActual" class="form-label">Contraseña actual</label>
+                        <input asp-for="ClaveActual" class="form-control" autocomplete="current-password" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NuevaClave" class="form-label">Nueva contraseña</label>
+                        <input asp-for="NuevaClave" class="form-control" autocomplete="new-password" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmacionNuevaClave" class="form-label">Repetir nueva contraseña</label>
+                        <input asp-for="ConfirmacionNuevaClave" class="form-control" autocomplete="new-password" />
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Guardar nueva contraseña</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

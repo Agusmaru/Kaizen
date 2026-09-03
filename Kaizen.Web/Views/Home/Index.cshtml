@@ -1,0 +1,40 @@
+@model DashboardViewModel
+@section Styles { <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" /> }
+@{ ViewData["Titulo"] = "Inicio"; }
+
+<div class="dashboard-page">
+    <header class="dashboard-header"><div><p class="eyebrow">Tu espacio de mejora continua</p><h1>Buen día, @((User.Identity?.Name ?? "Agustín").Split('@')[0])</h1><p>Organizá tus acciones, revisá el progreso y avanzá un poco cada día.</p></div><a class="btn btn-primary btn-new-goal" asp-controller="Goals" asp-action="Create"><span aria-hidden="true">＋</span> Nueva meta</a></header>
+    @if (Model.DueReviews.Any())
+    {
+        <section class="review-alert" aria-label="Revisiones pendientes"><span class="alert-icon" aria-hidden="true">!</span><div><strong>Tenés @Model.DueReviews.Count revisión(es) Kaizen pendiente(s).</strong><div class="review-links">@foreach (var goal in Model.DueReviews) { <a asp-controller="Reviews" asp-action="Create" asp-route-goalId="@goal.Id">Revisar @goal.Titulo <span>→</span></a> }</div></div></section>
+    }
+    <div id="daily-feedback" class="alert d-none" role="status"></div>
+    <div class="dashboard-grid">
+        <section class="panel today-panel" aria-labelledby="today-title">
+            <div class="panel-heading"><div class="title-with-icon"><span class="section-icon blue" aria-hidden="true">✓</span><div><h2 id="today-title">Acciones de hoy</h2><p>Registrá lo que hiciste para mantener tu progreso al día.</p></div></div><span id="today-summary" class="summary-pill">@Model.ResolvedToday de @Model.Today.Count registradas</span></div>
+            <div id="day-complete" class="completion-message @(Model.Today.Any() && Model.ResolvedToday == Model.Today.Count ? "" : "d-none")">¡Excelente! Completaste el registro de hoy.</div>
+            @if (!Model.Today.Any())
+            {
+                <div class="empty-state"><span class="empty-icon">✓</span><h3>No tenés acciones programadas para hoy</h3><p>Podés consultar tus metas o revisar las próximas acciones.</p><div><a class="btn btn-primary" asp-controller="Goals" asp-action="Index">Ver metas</a><a class="btn btn-soft" asp-controller="Calendar" asp-action="Index">Próximas acciones</a></div></div>
+            }
+            else
+            {
+                <div id="today-actions" class="today-list">
+                    @foreach (var x in Model.Today)
+                    {
+                        <article class="daily-action" data-entry-id="@x.Id" data-status="@x.Estado">
+                            <span class="action-check" aria-hidden="true"></span>
+                            <div class="action-copy"><div class="action-title"><strong>@x.Nombre</strong><span class="status-badge status-@x.StatusColor">@x.StatusLabel</span></div><div class="action-meta"><a asp-controller="Goals" asp-action="Details" asp-route-id="@x.MetaId">@x.GoalTitle</a>@if (x.Hora is not null) { <span>· @x.Hora.Value.ToString("HH:mm")</span> }@if (x.CantidadObjetivo is not null) { <span>· Objetivo: @x.CantidadObjetivo @x.UnidadMetrica</span> }</div></div>
+                            <form class="daily-log-form" asp-action="Registro" method="post" data-undo-url='@Url.Action("UndoLog", "Home")'><input type="hidden" name="id" value="@x.Id" /><div class="log-fields">@if (x.CantidadObjetivo is not null) { <label><span>Cantidad realizada</span><input name="actualValue" type="number" min="0" step="any" class="form-control" placeholder="Ej. 30" value="@x.ValorReal" /></label> }<label><span>Nota opcional</span><input name="note" class="form-control" placeholder="¿Cómo te fue?" value="@x.Nota" /></label></div><div class="log-actions"><button name="status" value="Completada" class="btn btn-success-soft" type="submit">✓ Realizada</button><button name="status" value="NoRealizada" class="btn btn-danger-soft" type="submit">× No realizada</button><button class="undo-log btn btn-ghost @(x.Estado == EstadoCumplimiento.Pendiente ? "d-none" : "")" type="button">Deshacer</button></div></form>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+        <section class="panel weekly-panel" aria-labelledby="weekly-title"><div class="panel-heading"><div><h2 id="weekly-title">Cumplimiento semanal</h2><p>Últimos siete días</p></div></div><div class="weekly-content"><div class="progress-ring" style="--progress:@((int)Model.WeeklyPercentage)"><div><strong>@Model.WeeklyPercentage%</strong><span>completado</span></div></div><p>Acciones realizadas durante los últimos siete días.</p></div></section>
+        <section class="panel goals-panel" aria-labelledby="goals-title"><div class="panel-heading"><div class="title-with-icon"><span class="section-icon purple" aria-hidden="true">◎</span><div><h2 id="goals-title">Resumen de metas activas</h2><p>Una vista rápida de tu avance esta semana.</p></div></div><a class="panel-link" asp-controller="Goals" asp-action="Index">Ver todas <span>→</span></a></div><div class="goals-table"><div class="goals-head"><span>Meta</span><span>Estado</span><span>Esta semana</span><span></span></div>@foreach (var item in Model.Metas) { <article class="goal-row"><div class="goal-main"><span class="goal-icon @item.BootstrapColor" aria-hidden="true">@item.Meta.Titulo.Substring(0, 1).ToUpperInvariant()</span><div><strong>@item.Meta.Titulo</strong><span>@item.Meta.AreaPersonal?.Nombre</span></div></div><div><span class="health-pill health-@item.BootstrapColor">@item.Label</span></div><div class="goal-progress"><div><span style="width:@((int)item.Percentage)%" class="bar-@item.BootstrapColor"></span></div><small>@item.Percentage%</small></div><a class="detail-link" asp-controller="Goals" asp-action="Details" asp-route-id="@item.Meta.Id">Ver detalle</a></article> }</div></section>
+        <section class="panel attention-panel"><div class="panel-heading compact"><div class="title-with-icon"><span class="section-icon amber" aria-hidden="true">!</span><h2>Metas que requieren atención</h2></div></div><div class="compact-list">@if (!Model.GoalsRequiringAttention.Any()) { <div class="empty-row">Todo está en buen camino.</div> }@foreach (var item in Model.GoalsRequiringAttention) { <a asp-controller="Goals" asp-action="Details" asp-route-id="@item.Meta.Id"><span>@item.Meta.Titulo</span><span><b class="health-pill health-@item.BootstrapColor">@item.Label</b><i>›</i></span></a> }</div></section>
+        <section class="panel reviews-panel"><div class="panel-heading compact"><div class="title-with-icon"><span class="section-icon blue" aria-hidden="true">▣</span><h2>Próximas revisiones Kaizen</h2></div></div><div class="compact-list review-list">@if (!Model.UpcomingReviews.Any()) { <div class="empty-row">No hay revisiones próximas.</div> }@foreach (var g in Model.UpcomingReviews) { <div><span><strong>@g.Titulo</strong><small>@g.FechaProximaRevision?.ToString("dd/MM/yyyy")</small></span><a asp-controller="Reviews" asp-action="Create" asp-route-goalId="@g.Id">Revisar</a></div> }</div></section>
+    </div>
+</div>
+@section Scripts { <script src="~/js/home.js" asp-append-version="true"></script> }
