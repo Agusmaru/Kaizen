@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Titulo"] - Kaizen</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/kaizen-logo.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/images/kaizen-logo-32.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="~/images/kaizen-logo-192.png" />
+    <link rel="manifest" href="~/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +21,7 @@
         <div class="app-shell">
             <aside class="app-sidebar" id="appSidebar">
                 <a class="brand" asp-controller="Home" asp-action="Index" aria-label="Kaizen, ir al inicio">
-                    <span class="brand-mark" aria-hidden="true"><span></span><span></span></span><span>Kaizen</span>
+                    <img class="brand-logo" src="~/images/kaizen-logo.svg" alt="" aria-hidden="true" /><span>Kaizen</span>
                 </a>
                 <nav class="side-nav" aria-label="Navegación principal">
                     <a class="side-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span></a>
@@ -27,12 +31,13 @@
                 </nav>
                 <div class="sidebar-account"><span class="account-avatar">@((User.Identity.Name ?? "A").Substring(0, 1).ToUpperInvariant())</span><span class="account-name">@User.Identity.Name</span><form asp-controller="Cuenta" asp-action="Salir" method="post"><button class="logout-button" type="submit" title="Salir" aria-label="Salir"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3m12-9h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></svg></button></form></div>
             </aside>
-            <header class="mobile-header"><button class="mobile-menu" type="button" data-sidebar-toggle aria-label="Abrir menú"><span></span><span></span><span></span></button><a class="brand" asp-controller="Home" asp-action="Index"><span class="brand-mark" aria-hidden="true"><span></span><span></span></span><span>Kaizen</span></a></header>
+            <header class="mobile-header"><button class="mobile-menu" type="button" data-sidebar-toggle aria-label="Abrir menú"><span></span><span></span><span></span></button><a class="brand" asp-controller="Home" asp-action="Index"><img class="brand-logo" src="~/images/kaizen-logo.svg" alt="" aria-hidden="true" /><span>Kaizen</span></a></header>
             <main class="app-content">@RenderBody()</main>
         </div>
         <div class="sidebar-backdrop" data-sidebar-toggle></div>
     }
-    else if (ViewContext.RouteData.Values["controller"]?.ToString() == "Cuenta" && ViewContext.RouteData.Values["action"]?.ToString() == "Ingresar")
+    else if (ViewContext.RouteData.Values["controller"]?.ToString() == "Cuenta" &&
+             ViewContext.RouteData.Values["action"]?.ToString() is "Ingresar" or "Registrarse")
     {
         <main class="auth-page-main">@RenderBody()</main>
     }

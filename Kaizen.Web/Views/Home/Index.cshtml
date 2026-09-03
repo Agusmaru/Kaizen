@@ -11,7 +11,7 @@
     <div id="daily-feedback" class="alert d-none" role="status"></div>
     <div class="dashboard-grid">
         <section class="panel today-panel" aria-labelledby="today-title">
-            <div class="panel-heading"><div class="title-with-icon"><span class="section-icon blue" aria-hidden="true">✓</span><div><h2 id="today-title">Acciones de hoy</h2><p>Registrá lo que hiciste para mantener tu progreso al día.</p></div></div><span id="today-summary" class="summary-pill">@Model.ResolvedToday de @Model.Today.Count registradas</span></div>
+            <div class="panel-heading"><div class="title-with-icon"><span class="section-icon blue" aria-hidden="true">✓</span><div><h2 id="today-title">Acciones de hoy</h2><p>Mantené presionadas las líneas y arrastrá cada acción para ordenarla.</p></div></div><span id="today-summary" class="summary-pill">@Model.ResolvedToday de @Model.Today.Count registradas</span></div>
             <div id="day-complete" class="completion-message @(Model.Today.Any() && Model.ResolvedToday == Model.Today.Count ? "" : "d-none")">¡Excelente! Completaste el registro de hoy.</div>
             @if (!Model.Today.Any())
             {
@@ -19,10 +19,11 @@
             }
             else
             {
-                <div id="today-actions" class="today-list">
+                <div id="today-actions" class="today-list" data-order-url='@Url.Action("Ordenar", "Home")'>
                     @foreach (var x in Model.Today)
                     {
                         <article class="daily-action" data-entry-id="@x.Id" data-status="@x.Estado">
+                            <button type="button" class="action-order-handle" title="Arrastrar para ordenar" aria-label="Ordenar @x.Nombre"><span></span><span></span><span></span></button>
                             <span class="action-check" aria-hidden="true"></span>
                             <div class="action-copy"><div class="action-title"><strong>@x.Nombre</strong><span class="status-badge status-@x.StatusColor">@x.StatusLabel</span></div><div class="action-meta"><a asp-controller="Goals" asp-action="Details" asp-route-id="@x.MetaId">@x.GoalTitle</a>@if (x.Hora is not null) { <span>· @x.Hora.Value.ToString("HH:mm")</span> }@if (x.CantidadObjetivo is not null) { <span>· Objetivo: @x.CantidadObjetivo @x.UnidadMetrica</span> }</div></div>
                             <form class="daily-log-form" asp-action="Registro" method="post" data-undo-url='@Url.Action("UndoLog", "Home")'><input type="hidden" name="id" value="@x.Id" /><div class="log-fields">@if (x.CantidadObjetivo is not null) { <label><span>Cantidad realizada</span><input name="actualValue" type="number" min="0" step="any" class="form-control" placeholder="Ej. 30" value="@x.ValorReal" /></label> }<label><span>Nota opcional</span><input name="note" class="form-control" placeholder="¿Cómo te fue?" value="@x.Nota" /></label></div><div class="log-actions"><button name="status" value="Completada" class="btn btn-success-soft" type="submit">✓ Realizada</button><button name="status" value="NoRealizada" class="btn btn-danger-soft" type="submit">× No realizada</button><button class="undo-log btn btn-ghost @(x.Estado == EstadoCumplimiento.Pendiente ? "d-none" : "")" type="button">Deshacer</button></div></form>

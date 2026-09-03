@@ -64,6 +64,7 @@ builder.Services.AddScoped<ServicioSesionesUsuario>();
 builder.Services.AddScoped<IDailyActionRepository, DailyActionRepository>();
 builder.Services.AddScoped<RegisterDailyAction>();
 builder.Services.AddScoped<UndoDailyAction>();
+builder.Services.AddScoped<ReorderDailyActions>();
 builder.Services.AddScoped<ScheduleService>();
 builder.Services.AddScoped<GoalProgressService>();
 builder.Services.AddScoped<GoalActivationService>();

@@ -52,6 +52,7 @@ public class ApplicationDbContext(
             .HasIndex(x => new { x.AccionPlanificadaId, x.FechaProgramada })
             .IsUnique();
         modelBuilder.Entity<AccionProgramada>().HasIndex(x => x.FechaProgramada);
+        modelBuilder.Entity<AccionProgramada>().Property(x => x.Orden).HasDefaultValue(0);
         modelBuilder.Entity<AccionProgramada>()
             .HasOne(x => x.Registro)
             .WithOne(x => x.AccionProgramada)

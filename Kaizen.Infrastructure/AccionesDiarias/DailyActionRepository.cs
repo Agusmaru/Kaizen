@@ -12,6 +12,13 @@ public sealed class DailyActionRepository(ApplicationDbContext db) : IDailyActio
             .Include(x => x.AccionPlanificada)
             .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public Task<List<AccionProgramada>> GetForDateAsync(DateOnly date, CancellationToken cancellationToken = default) =>
+        db.AccionesProgramadas
+            .Include(x => x.AccionPlanificada)
+            .ThenInclude(x => x!.Meta)
+            .Where(x => x.FechaProgramada == date)
+            .ToListAsync(cancellationToken);
+
     public void RemoveLog(RegistroAccion log) => db.RegistrosAccion.Remove(log);
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>

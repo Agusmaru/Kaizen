@@ -18,6 +18,38 @@
     text-transform: uppercase;
 }
 
+.calendar-current-day {
+    position: relative;
+    background: #eef1f5;
+    border-left: 4px solid #64748b !important;
+}
+
+.calendar-current-day .calendar-date {
+    color: #24324a;
+}
+
+.calendar-current-day .calendar-date strong {
+    font-size: 1.75rem;
+}
+
+.current-day-badge {
+    display: inline-flex;
+    margin-top: .2rem;
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    background: #64748b;
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.calendar-current-day .calendar-entry:last-child {
+    border-bottom-color: transparent !important;
+}
+
 .calendar-entry .form-control {
     max-width: 220px;
 }

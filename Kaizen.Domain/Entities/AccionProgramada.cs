@@ -8,6 +8,7 @@ public class AccionProgramada
     public int AccionPlanificadaId { get; set; }
     public AccionPlanificada? AccionPlanificada { get; set; }
     public DateOnly FechaProgramada { get; set; }
+    public int Orden { get; set; }
     public EstadoCumplimiento Estado { get; set; }
     public RegistroAccion? Registro { get; set; }
 }

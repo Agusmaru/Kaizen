@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Kaizen</title>
+  <rect width="512" height="512" rx="112" fill="#071d45"/>
+  <path d="M105 179 220 87c13-10 29-1 29 15v233c0 12-5 23-14 30l-130 104V179Z" fill="#fff"/>
+  <path d="m278 179 115-92c13-10 29-1 29 15v233c0 12-5 23-14 30L278 469V179Z" fill="#2f7bff"/>
+</svg>
