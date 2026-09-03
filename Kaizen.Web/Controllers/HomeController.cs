@@ -12,8 +12,12 @@ namespace Kaizen.Web.Controllers;
 [Authorize]
 public class HomeController(ApplicationDbContext db, GoalProgressService progress, RegisterDailyAction registerDailyAction, UndoDailyAction undoDailyAction, ReorderDailyActions reorderDailyActions, ILogger<HomeController> logger) : Controller
 {
+    [AllowAnonymous]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
+        if (User.Identity?.IsAuthenticated != true)
+            return View("Landing");
+
         var t = DateOnly.FromDateTime(DateTime.Today); var active = db.AccionesProgramadas.AsNoTracking().Where(x => x.AccionPlanificada!.Meta!.Estado == EstadoMeta.Activa && x.AccionPlanificada.Estado == EstadoAccion.Activa);
         var goals = await db.Metas.AsNoTracking().Include(x => x.AreaPersonal).Where(x => x.Estado == EstadoMeta.Activa).ToListAsync(ct);
         var rows = await active.Where(x => x.FechaProgramada >= t.AddDays(-6) && x.FechaProgramada <= t).ToListAsync(ct);

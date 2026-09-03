@@ -41,6 +41,11 @@
     {
         <main class="auth-page-main">@RenderBody()</main>
     }
+    else if (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" &&
+             ViewContext.RouteData.Values["action"]?.ToString() == "Index")
+    {
+        <main class="landing-page-main">@RenderBody()</main>
+    }
     else
     {
         <header><nav class="navbar navbar-dark bg-primary"><div class="container"><a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">Kaizen</a><div class="ms-auto d-flex gap-2"><a class="btn btn-outline-light btn-sm" asp-controller="Cuenta" asp-action="Ingresar">Ingresar</a><a class="btn btn-light btn-sm" asp-controller="Cuenta" asp-action="Registrarse">Registrarse</a></div></div></nav></header>

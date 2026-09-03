@@ -1,0 +1,88 @@
+@{
+    ViewData["Titulo"] = "Mejora continua";
+}
+@section Styles { <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" /> }
+
+<div class="landing-shell">
+    <header class="landing-nav">
+        <a class="landing-brand" asp-controller="Home" asp-action="Index" aria-label="Kaizen, inicio">
+            <img src="~/images/kaizen-logo.svg" alt="" aria-hidden="true" />
+            <span>Kaizen</span>
+        </a>
+        <nav aria-label="Navegación pública">
+            <a href="#como-funciona">Cómo funciona</a>
+            <a href="#funciones">Funciones</a>
+            <a class="landing-login" asp-controller="Cuenta" asp-action="Ingresar">Ingresar</a>
+            <a class="landing-register" asp-controller="Cuenta" asp-action="Registrarse">Crear cuenta</a>
+        </nav>
+    </header>
+
+    <section class="landing-hero">
+        <div class="hero-copy">
+            <span class="hero-kicker"><i></i> Mejora continua, todos los días</span>
+            <h1>Pequeños pasos.<br /><strong>Grandes cambios.</strong></h1>
+            <p>Convertí tus objetivos en hábitos sostenibles y revisá tu progreso cada día.</p>
+            <div class="hero-actions">
+                <a class="landing-primary" asp-controller="Cuenta" asp-action="Registrarse">Comenzar ahora <span>→</span></a>
+                <a class="landing-secondary" asp-controller="Cuenta" asp-action="Ingresar">Ya tengo una cuenta</a>
+            </div>
+            <small>Gratis para comenzar · Tus datos son privados</small>
+        </div>
+        <div class="hero-preview" aria-label="Vista previa del panel de Kaizen">
+            <div class="preview-window">
+                <div class="preview-top"><span></span><span></span><span></span><b>Tu progreso de hoy</b></div>
+                <div class="preview-body">
+                    <div class="preview-greeting"><div><small>JUEVES, 3 DE SEPTIEMBRE</small><strong>Buen día 👋</strong></div><span>2 de 3</span></div>
+                    <div class="preview-progress"><i style="--value:72%"></i></div>
+                    <div class="preview-action done"><em>✓</em><div><strong>Leer 20 minutos</strong><small>Crecimiento personal</small></div><b>Realizada</b></div>
+                    <div class="preview-action"><em></em><div><strong>Entrenar 45 minutos</strong><small>Bienestar físico</small></div><b>Pendiente</b></div>
+                    <div class="preview-action"><em>✓</em><div><strong>Practicar programación</strong><small>Desarrollo profesional</small></div><b>Realizada</b></div>
+                </div>
+            </div>
+            <span class="preview-float float-one">+1% cada día</span>
+            <span class="preview-float float-two">✓ Paso completado</span>
+        </div>
+    </section>
+
+    <section class="landing-section process-section" id="como-funciona">
+        <div class="section-heading"><span>Un método simple</span><h2>Tus objetivos, convertidos en progreso diario</h2><p>No necesitás cambiar todo de una vez. Kaizen te ayuda a avanzar mediante acciones pequeñas y sostenibles.</p></div>
+        <div class="process-grid">
+            <article><span>01</span><div class="process-icon target">◎</div><h3>Definí una meta</h3><p>Elegí qué querés mejorar y por qué es importante para vos.</p></article>
+            <article><span>02</span><div class="process-icon steps">↗</div><h3>Creá pequeñas acciones</h3><p>Transformá tu objetivo en actividades simples que puedas realizar.</p></article>
+            <article><span>03</span><div class="process-icon check">✓</div><h3>Registrá tu progreso</h3><p>Marcá lo realizado y observá cómo avanzás semana a semana.</p></article>
+            <article><span>04</span><div class="process-icon refresh">↻</div><h3>Revisá y ajustá</h3><p>Aprendé de tus resultados y adaptá el plan sin abandonar la meta.</p></article>
+        </div>
+    </section>
+
+    <section class="landing-section features-section" id="funciones">
+        <div class="feature-intro"><span>Todo en un solo lugar</span><h2>Las herramientas para mantenerte en movimiento</h2><p>Una vista clara de lo que querés lograr, lo que tenés que hacer hoy y cuánto avanzaste.</p><a asp-controller="Cuenta" asp-action="Registrarse">Crear mi primera meta <b>→</b></a></div>
+        <div class="feature-grid">
+            <article class="feature-main"><span class="feature-symbol">✓</span><h3>Acciones diarias</h3><p>Ordená tus prioridades y registrá cada pequeño avance sin perder el foco.</p><div class="mini-list"><i></i><span></span><b></b><i></i><span></span><b></b><i></i><span></span><b></b></div></article>
+            <article><span class="feature-symbol purple">◎</span><h3>Metas personales</h3><p>Organizá objetivos con fechas, métricas y acciones concretas.</p></article>
+            <article><span class="feature-symbol amber">▣</span><h3>Calendario</h3><p>Visualizá tus actividades y resultados por semana o por mes.</p></article>
+            <article><span class="feature-symbol green">↻</span><h3>Revisiones Kaizen</h3><p>Detectá qué funciona y realizá ajustes basados en tu experiencia.</p></article>
+            <article><span class="feature-symbol blue">⌁</span><h3>Progreso e historial</h3><p>Conservá los cambios y aprendizajes de todo tu recorrido.</p></article>
+        </div>
+    </section>
+
+    <section class="philosophy-section">
+        <div class="philosophy-mark"><span></span><span></span></div>
+        <div><span>La filosofía Kaizen</span><h2>No necesitás cambiar todo de una vez</h2><p>Kaizen significa mejora continua. Cada acción completada suma y cada revisión te permite encontrar una forma un poco mejor de seguir adelante.</p></div>
+        <blockquote>“Los grandes resultados nacen de pequeños cambios sostenidos.”</blockquote>
+    </section>
+
+    <section class="install-section" id="instalar">
+        <div><span class="soon-pill">Próximamente</span><h2>Llevá Kaizen con vos</h2><p>Estamos preparando la instalación de Kaizen en celulares para que puedas acceder como una aplicación desde cualquier lugar.</p></div>
+        <button type="button" disabled aria-disabled="true"><img src="~/images/kaizen-logo.svg" alt="" /> Instalar Kaizen <span>Próximamente</span></button>
+    </section>
+
+    <section class="final-cta">
+        <img src="~/images/kaizen-logo.svg" alt="" aria-hidden="true" />
+        <h2>Tu próximo gran cambio puede empezar hoy.</h2>
+        <p>Creá tu cuenta y empezá con una acción pequeña.</p>
+        <a asp-controller="Cuenta" asp-action="Registrarse">Crear mi cuenta gratis <span>→</span></a>
+        <small>¿Ya tenés una cuenta? <a asp-controller="Cuenta" asp-action="Ingresar">Ingresar</a></small>
+    </section>
+
+    <footer class="landing-footer"><a class="landing-brand" asp-controller="Home" asp-action="Index"><img src="~/images/kaizen-logo.svg" alt="" /><span>Kaizen</span></a><p>Pequeños pasos. Grandes cambios.</p><span>© @DateTime.Today.Year Kaizen</span></footer>
+</div>
