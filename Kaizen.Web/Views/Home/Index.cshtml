@@ -3,7 +3,7 @@
 @{ ViewData["Titulo"] = "Inicio"; }
 
 <div class="dashboard-page">
-    <header class="dashboard-header"><div><p class="eyebrow">Tu espacio de mejora continua</p><h1>Buen día, @((User.Identity?.Name ?? "Agustín").Split('@')[0])</h1><p>Organizá tus acciones, revisá el progreso y avanzá un poco cada día.</p></div><a class="btn btn-primary btn-new-goal" asp-controller="Goals" asp-action="Create"><span aria-hidden="true">＋</span> Nueva meta</a></header>
+    <header class="dashboard-header"><div><p class="eyebrow">Tu espacio de mejora continua</p><h1>Buen día, @((User.Identity?.Name ?? "Agustín").Split('@')[0])</h1><p>Organizá tus acciones, revisá el progreso y avanzá un poco cada día.</p></div><div class="dashboard-header-actions"><button id="notification-open" class="btn notification-button" type="button" aria-label="Configurar recordatorio diario" title="Configurar recordatorio diario"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-label">Recordatorio</span><span id="notification-indicator" class="notification-indicator d-none" aria-hidden="true"></span></button><a class="btn btn-primary btn-new-goal" asp-controller="Goals" asp-action="Create"><span aria-hidden="true">＋</span> Nueva meta</a></div></header>
     @if (Model.DueReviews.Any())
     {
         <section class="review-alert" aria-label="Revisiones pendientes"><span class="alert-icon" aria-hidden="true">!</span><div><strong>Tenés @Model.DueReviews.Count revisión(es) Kaizen pendiente(s).</strong><div class="review-links">@foreach (var goal in Model.DueReviews) { <a asp-controller="Reviews" asp-action="Create" asp-route-goalId="@goal.Id">Revisar @goal.Titulo <span>→</span></a> }</div></div></section>
@@ -38,4 +38,14 @@
         <section class="panel reviews-panel"><div class="panel-heading compact"><div class="title-with-icon"><span class="section-icon blue" aria-hidden="true">▣</span><h2>Próximas revisiones Kaizen</h2></div></div><div class="compact-list review-list">@if (!Model.UpcomingReviews.Any()) { <div class="empty-row">No hay revisiones próximas.</div> }@foreach (var g in Model.UpcomingReviews) { <div><span><strong>@g.Titulo</strong><small>@g.FechaProximaRevision?.ToString("dd/MM/yyyy")</small></span><a asp-controller="Reviews" asp-action="Create" asp-route-goalId="@g.Id">Revisar</a></div> }</div></section>
     </div>
 </div>
-@section Scripts { <script src="~/js/home.js" asp-append-version="true"></script> }
+<dialog id="notification-dialog" class="notification-dialog" data-user="@(User.Identity?.Name ?? "usuario")">
+    <form id="notification-form" method="dialog">
+        <div class="notification-dialog-heading"><span class="notification-dialog-icon" aria-hidden="true">◷</span><div><h2>Recordatorio diario</h2><p>Elegí cuándo querés recibir el resumen de tus acciones pendientes.</p></div><button id="notification-close" class="dialog-close" type="button" aria-label="Cerrar">×</button></div>
+        <div id="notification-status" class="notification-status" role="status" aria-live="polite"></div>
+        <label class="notification-toggle"><input id="notification-enabled" type="checkbox" /><span><strong>Activar notificación</strong><small>El navegador solicitará permiso la primera vez.</small></span></label>
+        <label class="notification-time"><span>Hora del recordatorio</span><input id="notification-time" class="form-control" type="time" value="09:00" required /></label>
+        <p class="notification-help">El aviso funciona mientras Kaizen esté abierto. La preferencia se guarda únicamente en este dispositivo.</p>
+        <div class="notification-dialog-actions"><button class="btn btn-outline-secondary" id="notification-cancel" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Guardar recordatorio</button></div>
+    </form>
+</dialog>
+@section Scripts { <script src="~/js/home.js" asp-append-version="true"></script><script src="~/js/notifications.js" asp-append-version="true"></script> }
