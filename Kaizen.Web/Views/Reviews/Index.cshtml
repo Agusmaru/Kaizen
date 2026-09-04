@@ -1,2 +1,24 @@
 @model IEnumerable<RevisionKaizen>
-@{ViewData["Titulo"]="Revisiones";}<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li><li class="breadcrumb-item active">Revisiones</li></ol></nav><div class="page-header"><div><h1 class="h3 mb-1">Revisiones</h1><p class="mb-0">Consultá lo que funcionó y los ajustes realizados.</p></div></div>@if(!Model.Any()){<div class="empty-state"><h2 class="h5">Todavía no hay revisiones</h2><p>Podés realizar una revisión desde el detalle de una meta.</p><a class="btn btn-primary" asp-controller="Goals" asp-action="Index">Ver metas</a></div>}else{<div class="card"><div class="table-responsive"><table class="table mb-0"><thead class="table-light"><tr><th>Meta</th><th>Período</th><th>Cumplimiento</th><th>Qué funcionó</th><th>Ajuste</th></tr></thead><tbody>@foreach(var r in Model){var color=r.PorcentajeCumplimiento>=80?"success":r.PorcentajeCumplimiento>=50?"warning":"danger";<tr><td><a asp-controller="Goals" asp-action="Details" asp-route-id="@r.MetaId">@r.Meta!.Titulo</a></td><td>@r.InicioPeriodo.ToString("dd/MM") - @r.FinPeriodo.ToString("dd/MM/yyyy")</td><td><span class="badge text-bg-@color">@r.PorcentajeCumplimiento%</span></td><td>@r.QueFunciono</td><td>@r.AjustePequeno</td></tr>}</tbody></table></div></div>}
+@{
+    ViewData["Titulo"] = "Revisiones";
+    var revisiones = Model.ToList();
+}
+@section Styles { <link rel="stylesheet" href="~/css/pages.css" asp-append-version="true" /> }
+
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li><li class="breadcrumb-item active">Revisiones</li></ol></nav>
+<header class="page-hero"><div><span class="page-eyebrow">Aprender y ajustar</span><h1>Revisiones</h1><p>Volvé sobre tu experiencia, reconocé lo que funcionó y decidí el próximo cambio.</p></div><a class="btn btn-outline-primary" asp-controller="Goals" asp-action="Index">Ir a mis metas</a></header>
+
+@if (revisiones.Count == 0)
+{
+    <div class="empty-state page-empty"><span aria-hidden="true">↻</span><h2>Todavía no hay revisiones</h2><p>Cuando completes un período, podrás revisar tus resultados desde el detalle de la meta.</p><a class="btn btn-primary" asp-controller="Goals" asp-action="Index">Ver mis metas</a></div>
+}
+else
+{
+    <section class="review-list" aria-label="Historial de revisiones">
+        @foreach (var revision in revisiones)
+        {
+            var color = revision.PorcentajeCumplimiento >= 80 ? "success" : revision.PorcentajeCumplimiento >= 50 ? "warning" : "danger";
+            <article class="review-card"><div class="review-score score-@color"><strong>@revision.PorcentajeCumplimiento%</strong><span>cumplimiento</span></div><div class="review-main"><div class="review-heading"><div><span>@revision.InicioPeriodo.ToString("dd MMM") — @revision.FinPeriodo.ToString("dd MMM yyyy")</span><h2><a asp-controller="Goals" asp-action="Details" asp-route-id="@revision.MetaId">@revision.Meta!.Titulo</a></h2></div><a class="review-link" asp-controller="Goals" asp-action="Details" asp-route-id="@revision.MetaId">Ver meta →</a></div><div class="review-insights"><div><small>Lo que funcionó</small><p>@revision.QueFunciono</p></div><div><small>Próximo ajuste</small><p>@revision.AjustePequeno</p></div></div></div></article>
+        }
+    </section>
+}

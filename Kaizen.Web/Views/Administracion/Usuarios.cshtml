@@ -1,0 +1,39 @@
+@model IReadOnlyList<Kaizen.Web.ViewModels.Administracion.UsuarioAdministracionViewModel>
+@{
+    ViewData["Titulo"] = "Administrar usuarios";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Usuarios</h1>
+        <p class="text-secondary mb-0">Administrá el acceso sin visualizar contraseñas existentes.</p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] is string mensaje)
+{
+    <div class="alert alert-success" role="status">@mensaje</div>
+}
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead><tr><th>Correo</th><th>Estado</th><th>Tipo</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.Correo</td>
+                    <td>
+                        @if (usuario.EstaBloqueado) { <span class="badge text-bg-danger">Bloqueado</span> }
+                        else if (usuario.DebeCambiarClave) { <span class="badge text-bg-warning">Debe cambiar contraseña</span> }
+                        else { <span class="badge text-bg-success">Activo</span> }
+                    </td>
+                    <td>@(usuario.EsAdministrador ? "Administrador" : "Usuario")</td>
+                    <td class="text-end"><a class="btn btn-outline-primary btn-sm" asp-action="RestablecerClave" asp-route-id="@usuario.Id">Restablecer contraseña</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

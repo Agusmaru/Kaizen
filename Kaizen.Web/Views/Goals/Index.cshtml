@@ -1,6 +1,37 @@
 @model IEnumerable<GoalProgressViewModel>
-@if(TempData["SuccessMessage"] is string success){<div class="alert alert-success" role="status">@success</div>}
-@if(TempData["ErrorMessage"] is string error){<div class="alert alert-danger" role="alert">@error</div>}
-<div class="mb-3"><a class="btn btn-outline-secondary btn-sm" asp-action="Index" asp-route-archived="@(!(bool)ViewBag.ShowArchived)">@((bool)ViewBag.ShowArchived?"Ver metas actuales":"Ver metas archivadas")</a></div>
-@if(Model.Any(x=>x.Meta.Estado==EstadoMeta.Borrador)){<div class="alert alert-secondary"><strong>Borradores:</strong> @foreach(var draft in Model.Where(x=>x.Meta.Estado==EstadoMeta.Borrador)){<a class="btn btn-outline-primary btn-sm ms-2" asp-action="Create" asp-route-id="@draft.Meta.Id">Continuar “@draft.Meta.Titulo”</a>}</div>}
-@{ViewData["Titulo"]="Metas";}<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li><li class="breadcrumb-item active">Metas</li></ol></nav><div class="page-header"><div><h1 class="h3 mb-1">Metas</h1><p class="mb-0">Consultá el estado y el avance de tus metas.</p></div><a class="btn btn-primary" asp-action="Create">Nueva meta</a></div>@if(!Model.Any()){<div class="empty-state"><h2 class="h5">Todavía no creaste una meta</h2><p>Comenzá definiendo qué querés mejorar.</p><a class="btn btn-primary" asp-action="Create">Nueva meta</a></div>}else{<div class="card"><div class="table-responsive"><table class="table table-hover mb-0"><thead class="table-light"><tr><th>Meta</th><th>Área</th><th>Estado</th><th>Progreso semanal</th><th>Fecha objetivo</th><th></th></tr></thead><tbody>@foreach(var item in Model){<tr><td><strong>@item.Meta.Titulo</strong><div class="small">@item.Meta.Descripcion</div></td><td>@item.Meta.AreaPersonal?.Nombre</td><td><span class="badge text-bg-@item.BootstrapColor">@item.Label</span></td><td style="min-width:140px"><div class="progress"><div class="progress-bar bg-@item.BootstrapColor" style="width:@item.Percentage%"></div></div><small>@item.Percentage%</small></td><td>@(item.Meta.FechaObjetivo?.ToString("dd/MM/yyyy")??"Sin fecha")</td><td><a class="btn btn-outline-primary btn-sm" asp-action="Details" asp-route-id="@item.Meta.Id">Ver detalle</a></td></tr>}</tbody></table></div></div>}
+@{
+    ViewData["Titulo"] = "Metas";
+    var archivadas = (bool)ViewBag.ShowArchived;
+    var metas = Model.ToList();
+    var borradores = metas.Where(x => x.Meta.Estado == EstadoMeta.Borrador).ToList();
+    var visibles = metas.Where(x => x.Meta.Estado != EstadoMeta.Borrador).ToList();
+}
+@section Styles { <link rel="stylesheet" href="~/css/pages.css" asp-append-version="true" /> }
+
+@if (TempData["SuccessMessage"] is string success) { <div class="alert alert-success" role="status">@success</div> }
+@if (TempData["ErrorMessage"] is string error) { <div class="alert alert-danger" role="alert">@error</div> }
+
+<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li><li class="breadcrumb-item active">Metas</li></ol></nav>
+<header class="page-hero">
+    <div><span class="page-eyebrow">Tu dirección</span><h1>@(archivadas ? "Metas archivadas" : "Metas")</h1><p>@(archivadas ? "Consultá objetivos anteriores y su recorrido." : "Convertí lo que querés mejorar en avances que puedas ver.")</p></div>
+    <div class="page-actions"><a class="btn btn-outline-primary" asp-action="Index" asp-route-archived="@(!archivadas)">@(archivadas ? "Ver metas actuales" : "Ver archivadas")</a>@if (!archivadas) { <a class="btn btn-primary" asp-action="Create"><span aria-hidden="true">＋</span> Nueva meta</a> }</div>
+</header>
+
+@if (borradores.Count > 0)
+{
+    <section class="draft-panel" aria-labelledby="draft-title"><div><span class="draft-icon" aria-hidden="true">✎</span><div><h2 id="draft-title">Tenés @(borradores.Count == 1 ? "un borrador" : $"{borradores.Count} borradores")</h2><p>Podés continuar exactamente desde donde lo dejaste.</p></div></div><div class="draft-links">@foreach (var item in borradores) { <a asp-action="Create" asp-route-id="@item.Meta.Id">Continuar “@item.Meta.Titulo” <span>→</span></a> }</div></section>
+}
+
+@if (visibles.Count == 0)
+{
+    <div class="empty-state page-empty"><span aria-hidden="true">◎</span><h2>@(archivadas ? "No hay metas archivadas" : "Todavía no creaste una meta")</h2><p>@(archivadas ? "Las metas que archives aparecerán acá." : "Elegí algo concreto que quieras mejorar y empezá con un pequeño paso.")</p>@if (!archivadas) { <a class="btn btn-primary" asp-action="Create">Crear mi primera meta</a> }</div>
+}
+else
+{
+    <section class="goal-grid" aria-label="Listado de metas">
+        @foreach (var item in visibles)
+        {
+            <article class="goal-card"><div class="goal-card-top"><span class="goal-area">@item.Meta.AreaPersonal?.Nombre</span><span class="status-pill status-@item.BootstrapColor">@item.Label</span></div><div class="goal-card-body"><h2>@item.Meta.Titulo</h2><p>@item.Meta.Descripcion</p></div><div class="goal-progress"><div><span>Progreso semanal</span><strong>@item.Percentage%</strong></div><div class="progress" role="progressbar" aria-valuenow="@item.Percentage" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-@item.BootstrapColor" style="width:@item.Percentage%"></div></div></div><div class="goal-card-footer"><span><small>Fecha objetivo</small><strong>@(item.Meta.FechaObjetivo?.ToString("dd/MM/yyyy") ?? "Sin fecha")</strong></span><a asp-action="Details" asp-route-id="@item.Meta.Id">Ver detalle <span aria-hidden="true">→</span></a></div></article>
+        }
+    </section>
+}

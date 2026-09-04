@@ -1,0 +1,33 @@
+@model Kaizen.Web.ViewModels.Administracion.RestablecerClaveViewModel
+@{
+    ViewData["Titulo"] = "Restablecer contraseña";
+}
+
+<div class="page-header">
+    <div>
+        <a asp-action="Usuarios">← Volver a usuarios</a>
+        <h1 class="mt-2">Restablecer contraseña</h1>
+        <p class="text-secondary mb-0">Asigná una contraseña temporal a <strong>@Model.Correo</strong>.</p>
+    </div>
+</div>
+
+<div class="card"><div class="card-body p-4">
+    <div class="alert alert-warning">Las sesiones abiertas de este usuario se cerrarán y deberá cambiar la contraseña cuando vuelva a ingresar.</div>
+    <form asp-action="RestablecerClave" method="post">
+        <input asp-for="UsuarioId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="mb-3">
+            <label asp-for="ClaveTemporal" class="form-label"></label>
+            <input asp-for="ClaveTemporal" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="ClaveTemporal" class="text-danger"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="ConfirmacionClave" class="form-label"></label>
+            <input asp-for="ConfirmacionClave" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmacionClave" class="text-danger"></span>
+        </div>
+        <button class="btn btn-primary" type="submit">Asignar contraseña temporal</button>
+    </form>
+</div></div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -79,6 +79,16 @@ public sealed class ServicioSesionesUsuario(ContextoIdentidad contexto)
         await contexto.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task RevocarTodasAsync(string usuarioId, CancellationToken cancellationToken = default)
+    {
+        var ahora = DateTime.UtcNow;
+        var sesiones = await contexto.SesionesUsuario
+            .Where(x => x.UsuarioId == usuarioId && x.FechaRevocacion == null)
+            .ToListAsync(cancellationToken);
+        foreach (var sesion in sesiones) sesion.FechaRevocacion = ahora;
+        await contexto.SaveChangesAsync(cancellationToken);
+    }
+
     private static string? Limitar(string? valor, int longitud) =>
         string.IsNullOrWhiteSpace(valor) ? null : valor[..Math.Min(valor.Length, longitud)];
 }
